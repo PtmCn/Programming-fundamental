@@ -3,10 +3,15 @@ int main()
 {
 	float totalPrice,age,discount;
 	char memStat,cash;
-	scanf ("%f %c",&totalPrice,&memStat);
+	
+	printf ("Enter the price :");
+	scanf (" %f",&totalPrice);
+	printf ("Membership?(Y/N)");
+	scanf (" %c",&memStat);
 	if (memStat == 'Y')
 	{
-		scanf ("%f", &age);
+		printf ("Age :");
+		scanf (" %f", &age);
 		if (age>60)
 		discount = 0.2;
 		else
@@ -14,6 +19,7 @@ int main()
 	}
 	else if (memStat == 'N')
 	{
+		printf ("Cash?(Y/N)");
 		scanf (" %c", &cash);
 		if (cash == 'Y')
 		discount = 0.05;
