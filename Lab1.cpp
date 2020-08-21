@@ -1,24 +1,20 @@
 #include <stdio.h>
 int main()
 {
-	int x,f;
-	f=2;
-	scanf ("Enter number : %d",&x);
+	long x,f=2;
+	printf ("Enter number:");
+	scanf ("%ln",&x);
 	printf ("Factorizing result : ");
-	while (x!=1)
+	while (x!=1 && x !=f)
 	{
-		if (x%f==0)
+		 if (x%f == 0)
 		{
-			while (x%f==0)
-			{
-			printf("%d",f);
+			printf ("%ln x ",f );
 			x=x/f;
-			}
 		}
 		else
-		{
-			f+=1;
-		}
+		f=f+1;
 	}
-	return 0;
+	printf ("%ln", x);
+return 0;
 }
