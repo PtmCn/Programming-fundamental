@@ -7,7 +7,12 @@ int main()
 	printf ("Factorizing result : ");
 	while (x!=1 && x !=f)
 	{
-		 if (x%f == 0)
+		if (x==0)
+		{
+		printf ("Every number is a factor of ");
+		break;
+		}
+		else if (x%f == 0)
 		{
 			printf ("%d x ",f );
 			x=x/f;
