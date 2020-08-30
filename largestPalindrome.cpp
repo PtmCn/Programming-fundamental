@@ -20,7 +20,7 @@ int main ()
 			}
 			if (reverse == product && product> max)
 			{
-					max =product;
+				max =product;
 			}
 		}
 	}
