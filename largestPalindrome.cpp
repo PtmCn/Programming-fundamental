@@ -18,12 +18,9 @@ int main ()
 				reverse = reverse*10+ revProd%10;
 				revProd /=10;
 			}
-			if (reverse == product)
+			if (reverse == product && product> max)
 			{
-				if (product> max)
-				{
 					max =product;
-				}
 			}
 		}
 	}
