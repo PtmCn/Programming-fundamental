@@ -13,7 +13,7 @@ int main ()
 	{
 		//calling a function to get sum
 		num= sumFac(a,b);
-		if (a==num)
+		if (a==num && a%num==0)
 		printf("%d\t", num);
 	}
 	return 0;
