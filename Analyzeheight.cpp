@@ -12,7 +12,7 @@ int main ()
 	while (count<num)
 	{
 		do{
-		printf ("Enter number no.%d\n",count+1);
+		printf ("Enter height no.%d\n",count+1);
 		scanf (" %f", &high[count]);
 		}
 		while (high[count]<0);
