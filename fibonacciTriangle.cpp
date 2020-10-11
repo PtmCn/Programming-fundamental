@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <windows.h>
 
 int main()
 {
@@ -7,7 +6,7 @@ int main()
     printf ("Enter the number of lines:");
     scanf ("%d", &n);
     printf ("Output:\n");
-    Sleep(1000);
+    
     for ( j = 1;j<=n;j++)
     {
         for ( i = 1;i<=j;i++)
