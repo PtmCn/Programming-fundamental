@@ -1,39 +1,68 @@
 #include<stdio.h>
+#include<windows.h>
+#include<time.h>
 #include<conio.h>
-#include<Windows.h>
+void gotoxy(int x, int y)
+{
+	COORD c = { x, y };
+	SetConsoleCursorPosition( GetStdHandle(STD_OUTPUT_HANDLE) , c);
+}
 void setcolor(int fg,int bg)
 {
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 SetConsoleTextAttribute(hConsole, bg*16+fg);
 }
-void gotoxy(int x, int y)
+void draw_ship(int x,int y)
 {
-COORD c = { x, y };
-SetConsoleCursorPosition( GetStdHandle(STD_OUTPUT_HANDLE) , c);
-}
-void draw_ship(int x, int y)
-{
-	gotoxy(x,y);
-	setcolor(2,4); 
-	printf(" <-0-> ");
+	gotoxy(x,y);setcolor(2,4); printf(" <-0-> ");
 }
 void erase_ship(int x, int y)
 {
-	gotoxy(x,y);
-	setcolor(2,0);
-	printf("        ");
+	gotoxy(x,y);setcolor(2,0);printf("        ");
 }
-void draw_bullet(int x, int y)
+void draw_bullet(int x,int y)
 {
-	gotoxy(x,y);
-	setcolor(2,0);
-	printf("^");
+	gotoxy(x,y);setcolor(2,0);printf("^");
 }
-void erase_bullet(int x, int y)
+void clear_bullet(int x,int y)
 {
-	gotoxy(x,y);
-	setcolor(2,0);
-	printf("   ");
+	gotoxy(x,y);setcolor(0,0);printf(" ");
+}
+void draw_star(int x,int y)
+{
+	gotoxy(x,y);setcolor(7,0);printf("*");
+}
+void spawn_star()
+{
+	int i,x,y;
+	srand( time( NULL ) );
+	for (i = 0;i < 20;i++){
+		x = rand()%61;
+		y = rand()%4;	
+		draw_star(x+10,y+2);
+	}
+}
+void new_star(int x,int y)
+{
+	setcolor(7,0),
+	srand( time( NULL ) );
+	x = rand()%61;
+	y = rand()%4;
+	gotoxy(x+10,y+2);printf("*");
+}
+void score(int x,int y,int point){
+	gotoxy(x=75,y=0);setcolor(1,8);printf(" %d ",point);
+}
+char cursor(int x, int y){
+HANDLE hStd = GetStdHandle(STD_OUTPUT_HANDLE);
+char buf[2]; COORD c = {x,y}; DWORD num_read;
+if(
+!ReadConsoleOutputCharacter(hStd,(LPTSTR)buf,1,c,(LPDWORD)&num_read) )
+
+return '\0';
+else
+return buf[0];
+
 }
 void setcursor(bool visible)
 {
@@ -45,49 +74,39 @@ SetConsoleCursorInfo(console,&lpCursor);
 }
 int main()
 {
-	char ch ='.',drt = 'S';
-	int x = 40, y = 10;//ship
-	int bx[5],by[5],bc = 0;//bullet
+	char ch='.';
+	int x=38,y=20;
+	int point = 0;
+	int bx,by,i;
+	int bullet = 0;
+	spawn_star();
+	draw_ship(x,y);
+	score(x,y,point);
 	setcursor(0);
-	draw_ship(x, y);
 	do {
-		/*window size */
-		if (x == 80) { erase_ship(x, y), draw_ship(--x, y); }
-		else if (x == 0) { erase_ship(x, y), draw_ship(++x, y); }
-		else if (y == 20) { erase_ship(x, y), draw_ship(x, --y); }
-		else if (y == 0) { erase_ship(x, y), draw_ship(x, ++y); }
-		
-		/*hit check*/
-		if (_kbhit()) {
-			ch = _getch();
-			if (ch == 'a') { drt = 'L';}	//left
-			else if (ch == 'd') { drt = 'R';}	//right
-			else if (ch == 'w') { drt = 'U';}	//up
-			else if (ch == 's') { drt = 'D';}	//down
-			else if (ch == 'e') { drt = 'S';}	//stop
-			else if (ch == ' '&& bc < 5) 		//bullet status & position
-			{
-				bx[bc]=x+3;
-				by[bc]=y-1;
-				bc += 1;
-			}
+		if (x == 80) { erase_ship(x, y),draw_ship(x=0, y); }
+		else if (x == 0) {erase_ship(x, y), draw_ship(x=80, y); }
+		if (_kbhit()){
+			ch=_getch();
+			if(ch=='a') {erase_ship(x, y),draw_ship(--x,y);}
+			if(ch=='s') {erase_ship(x, y),draw_ship(++x,y);}
+			if(bullet!=1 && ch==' ') {bullet=1; bx=x+3; by=y-1;}
 			fflush(stdin);
 		}
-		
-		/*direction check*/
-		if (drt == 'L') {erase_ship(x,y),draw_ship(--x,y);}
-		else if (drt == 'R') {erase_ship(x,y),draw_ship(++x,y);}
-		else if (drt == 'U') {erase_ship(x,y),draw_ship(x,--y);}
-		else if (drt == 'D') {erase_ship(x,y),draw_ship(x,++y);}
-		else if (drt == 'S') {;}
-		
-		/*bullet movement*/
-		if ( bc >0 && bc <=5 ){
-			erase_bullet(bx[bc-1],by[bc-1]);
-			if (by[bc-1] > 0){draw_bullet(bx[bc-1],--by[bc-1]);}
-			else bc-=1;	
+		if (bullet==1) {
+			clear_bullet(bx,by);
+			if (by==2) {bullet=0;} 
+			if(cursor(bx,by-1)== '*'){
+				score(x,y,++point);
+				new_star(x,y);
+				Beep(783.99,100);
+				clear_bullet(bx,by-1);	
+			}
+			if (by > 2) { draw_bullet(bx,--by);}
 		}
-	Sleep(100);
-	} while (ch != 'x');
-	return 0;
+		Sleep(80);
+		
+		} while (ch!='x');
+		
+return 0;
 }
